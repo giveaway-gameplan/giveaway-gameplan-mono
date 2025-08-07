@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: ./api
+    env_file:
+      - ./api/.env
+    ports:
+      - 4000:4000
+    restart: unless-stopped
+  web:
+    depends_on:
+      - api
+    build: ./ui
+    env_file:
+      - ./ui/.env.production
+    ports:
+      - 3000:3000
