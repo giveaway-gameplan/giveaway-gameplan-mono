@@ -1,5 +1,6 @@
 services:
   api:
+    image: patricklaviola/giveaway-api:latest
     build:
       context: ./api
     env_file:
@@ -8,10 +9,13 @@ services:
       - 4000:4000
     restart: unless-stopped
   web:
+    image: patricklaviola/giveaway-web:latest
     depends_on:
       - api
-    build: ./ui
+    build:
+      context: ./ui
     env_file:
       - ./ui/.env.production
     ports:
       - 3000:3000
+    restart: unless-stopped
