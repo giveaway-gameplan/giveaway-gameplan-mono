@@ -21,9 +21,9 @@ const Header = () => {
           pb-6
           `}
         >
-          <div>Sports cost money.</div>
-          <div>Giveaways don&apos;t.</div>
-          <div>We know where they are.</div>
+          <div>
+            Sports are expensive, knowing where giveaways are is priceless
+          </div>
         </h1>
       </Link>
     </header>
