@@ -1,16 +1,6 @@
 import { Event } from "../lib/definitions";
 import EventCard from "./EventCard";
 
-// import {
-//   leagues,
-//   mlbTeams,
-//   nflTeams,
-//   nhlTeams,
-//   nbaTeams,
-// } from "../lib/sport-options";
-// make sure the search param is in the sport-options before fetching. Otherwise show alternative UI?
-// or just let the request fail and show 404 page
-
 export default async function EventList({
   league,
   team,
@@ -26,9 +16,7 @@ export default async function EventList({
   const formattedDate = today.toISOString().split("T")[0];
   if (!dow && !date) date = formattedDate;
 
-  // const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
   const base = process.env.NEXT_PUBLIC_API_BASE_URL!;
-  // const base = "http://localhost:4000";
   const url = new URL("/api/v1/events", base);
 
   const searchParams = new URLSearchParams();
@@ -37,10 +25,6 @@ export default async function EventList({
   if (date) searchParams.append("date", date);
   if (dow) searchParams.append("dow", dow);
   if (searchParams.toString()) url.search = searchParams.toString();
-
-  console.log("====================================");
-  console.log(url.toString());
-  console.log("====================================");
 
   try {
     const response = await fetch(url.toString());
@@ -63,25 +47,3 @@ export default async function EventList({
     return <div>Error fetching data</div>;
   }
 }
-
-// STATIC
-// const response = await fetch("http://localhost:4000/api/v1/events");
-//
-//
-//
-// STATIC BUT REVALIDATES EVERY HOUR
-// const response = await fetch("http://localhost:4000/api/v1/events", {
-//   next: {
-//     revalidate: 3600,
-//   },
-// });
-//
-//
-//
-// DYNAMIC
-// const response = await fetch(
-//   `http://localhost:4000/api/v1/events?query=${query}`,
-//   {
-//     cache: "no-store",
-//   }
-// );
