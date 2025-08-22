@@ -28,8 +28,8 @@ export default function RootLayout({
     <html
       lang="en"
       className="
-        selection:bg-amber-400 selection:text-zinc-900
-        bg-zinc-900
+        selection:bg-amber-500 selection:text-zinc-900
+        bg-sky-950
         "
     >
       <body

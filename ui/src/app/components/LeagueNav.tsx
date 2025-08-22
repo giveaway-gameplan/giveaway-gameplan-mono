@@ -16,7 +16,7 @@ const LeagueNav = () => {
       text-shadow-sm text-shadow-amber-400
       shadow-md shadow-amber-200
       inset-shadow-sm inset-shadow-amber-200
-      bg-linear-to-tr from-slate-900/90 from-0% via-slate-900/50 via-50% to-white to-100%
+      bg-linear-to-tr from-sky-300/40 from-0% via-sky-900/50 via-60% to-sky-200/50 to-100%
       "
     >
       {leagues.map((league) => (

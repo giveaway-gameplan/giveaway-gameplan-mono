@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function GGLogo() {
   return (
     <Image
-      src="/logo.svg"
+      src="/also_good.svg"
       width={1000}
       height={1000}
       alt="Logo"

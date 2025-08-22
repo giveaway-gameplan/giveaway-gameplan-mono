@@ -20,7 +20,7 @@ const FilterInput = ({
   px-6 py-3 rounded-lg
   shadow-md shadow-amber-200
   inset-shadow-sm inset-shadow-amber-200
-  bg-linear-to-tr from-amber-200/20 from-0% via-zinc-900/5 via-50% to-amber-200/20 to-100%
+  bg-linear-to-tr from-amber-200/50 from-0% via-amber-500/40 via-50% to-amber-200/50 to-100%
   `;
 
   if (inputType === "date") {
