@@ -34,13 +34,19 @@ export default async function EventList({
     const events: Event[] = await response.json();
 
     return (
-      <div className="flex flex-col gap-10">
-        <ul className="flex flex-row flex-wrap justify-center gap-10">
-          {events.map((event: Event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </ul>
-      </div>
+      <ul
+        className="
+        w-full
+        flex flex-row flex-nowrap overflow-auto justify-evenly
+        gap-10
+        [-ms-overflow-style:auto]
+        [scrollbar-color:#11c8e0_transparent]
+        [scrollbar-width:thin]"
+      >
+        {events.map((event: Event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
+      </ul>
     );
   } catch (error) {
     console.error(error);

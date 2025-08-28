@@ -7,7 +7,8 @@ const EventCard = ({ event }: { event: Event }) => {
     <li
       className="
       text-sky-200 text-center font-extrabold
-      w-110 min-h-110 p-4 rounded-2xl
+      p-4 mb-4 rounded-2xl
+      min-w-full md:min-w-110 min-h-110
       shadow-md shadow-sky-200
       inset-shadow-sm inset-shadow-sky-200
       flex flex-col justify-between items-center

@@ -8,6 +8,31 @@ export const daysOfWeek = [
   "sunday",
 ];
 
+export const capitalizedDOW = {
+  monday: "Mondays",
+  tuesday: "Tuesdays",
+  wednesday: "Wednesdays",
+  thursday: "Thursdays",
+  friday: "Friday",
+  saturday: "Saturdays",
+  sunday: "Sundays",
+};
+
+export const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 export const leagues = ["mlb", "nfl", "nhl", "nba"];
 
 export const mlbTeams = [
