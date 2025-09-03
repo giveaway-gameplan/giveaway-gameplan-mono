@@ -8,7 +8,7 @@ const EventCard = ({ event }: { event: Event }) => {
       className="
       text-sky-200 text-center font-extrabold
       p-4 mb-4 rounded-2xl
-      min-w-full md:min-w-110 min-h-110
+      min-w-full md:min-w-120 md:w-120 h-140
       shadow-md shadow-sky-200
       inset-shadow-sm inset-shadow-sky-200
       flex flex-col justify-between items-center

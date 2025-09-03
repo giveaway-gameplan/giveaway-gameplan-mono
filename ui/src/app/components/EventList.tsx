@@ -12,9 +12,9 @@ export default async function EventList({
   date?: string;
   dow?: string;
 }) {
-  const today = new Date();
-  const formattedDate = today.toISOString().split("T")[0];
-  if (!dow && !date) date = formattedDate;
+  // const today = new Date();
+  // const formattedDate = today.toISOString().split("T")[0];
+  // if (!dow && !date) date = formattedDate;
 
   const base = process.env.NEXT_PUBLIC_API_BASE_URL!;
   const url = new URL("/api/v1/events", base);
@@ -33,11 +33,19 @@ export default async function EventList({
     }
     const events: Event[] = await response.json();
 
+    if (events && events.length === 0)
+      return (
+        <div className="text-sky-200/50 text-2xl">
+          No day is your lucky day. There ane no giveaways for the foreseeable
+          future!
+        </div>
+      );
+
     return (
       <ul
         className="
         w-full
-        flex flex-row flex-nowrap overflow-auto justify-evenly
+        flex flex-row flex-nowrap overflow-auto justify-center-safe
         gap-10
         [-ms-overflow-style:auto]
         [scrollbar-color:#11c8e0_transparent]

@@ -28,9 +28,9 @@ export default async function Layout({
   }
 
   return (
-    <div className="flex flex-col  md:flex-row gap-10 md:gap-0">
+    <div className="flex flex-col md:flex-row gap-10 md:mr-10">
       <TeamNav league={league} teams={teams} />
-      <div className="max-w-screen overflow-x-hidden">{children}</div>
+      <div className="w-full maw-w-screen overflow-x-hidden">{children}</div>
     </div>
   );
 }

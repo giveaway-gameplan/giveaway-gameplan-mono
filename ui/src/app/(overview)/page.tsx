@@ -1,14 +1,11 @@
 import PageEventLists from "../components/PageEventLists";
 
-export default async function LeaguePage({
-  params,
+export default async function MainPage({
   searchParams,
 }: {
-  params: Promise<{ league: string }>;
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  const { league } = await params;
   const { date, dow } = await searchParams;
 
-  return <PageEventLists league={league} date={date} dow={dow} />;
+  return <PageEventLists date={date} dow={dow} />;
 }

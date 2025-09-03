@@ -16,9 +16,10 @@ const FilterInput = ({
   val: string;
 }) => {
   const styles = `
+  min-w-70
   text-amber-100 font-bold
   px-6 py-3 rounded-lg
-  shadow-md shadow-amber-200
+  shadow-sm shadow-amber-200
   inset-shadow-sm inset-shadow-amber-200
   bg-linear-to-tr from-amber-200/50 from-0% via-amber-500/40 via-50% to-amber-200/50 to-100%
   `;

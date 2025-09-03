@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Event } from "../lib/definitions";
 import EventCard from "./EventCard";
-import { monthNames } from "../lib/sport-options";
 
 type Props = {
   league?: string;
@@ -11,9 +10,6 @@ type Props = {
 };
 
 export default function EventList({ league, team }: Props) {
-  // const [dateFilter, setDateFilter] = useState<string | undefined>(
-  //   new Date().toISOString().split("T")[0]
-  // );
   const [events, setEvents] = useState<Event[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,12 +39,22 @@ export default function EventList({ league, team }: Props) {
     fetchEvents();
   }, [league, team, dateFilter]);
 
-  if (error) return <div>Error fetching data</div>;
-  if (!events) return <div>Loading...</div>;
-
-  console.log("====================================");
-  console.log("RENDERED");
-  console.log("====================================");
+  if (error)
+    return (
+      <div className="text-rose-500 text-2xl font-bold">
+        [ Error fetching data ]
+      </div>
+    );
+  if (events === null)
+    return (
+      <div className="text-sky-200/50 text-2xl font-bold">Loading . . .</div>
+    );
+  if (events.length === 0)
+    return (
+      <div className="text-sky-200/50 text-2xl">
+        Today is not your lucky day. There ane no giveaways!
+      </div>
+    );
 
   return (
     <ul

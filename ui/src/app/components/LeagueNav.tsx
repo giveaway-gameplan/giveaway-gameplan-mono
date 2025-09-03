@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { leagues } from "../lib/sport-options";
 import BallIcon from "./BallIcon";
 
 const LeagueNav = () => {
+  const pathname = usePathname().split("/")[1];
+
   return (
     <nav
       className="
@@ -13,8 +18,8 @@ const LeagueNav = () => {
       [scrollbar-width:thin]
       rounded-2xl
       text-amber-100 text-2xl font-bold
-      text-shadow-sm text-shadow-amber-400
-      shadow-md shadow-amber-200
+      text-shadow-xs text-shadow-amber-400
+      shadow-sm shadow-amber-200
       inset-shadow-sm inset-shadow-amber-200
       bg-linear-to-tr from-sky-300/40 from-0% via-sky-900/50 via-60% to-sky-200/50 to-100%
       "
@@ -22,11 +27,12 @@ const LeagueNav = () => {
       {leagues.map((league) => (
         <Link key={league} href={`/${league}`}>
           <div
-            className="
-          flex items-center gap-5
-          py-5 px-4 rounded-2xl 
-          hover:text-amber-400 hover:text-shadow-none
-          "
+            className={`
+              ${`/${pathname}` === `/${league}` && "text-amber-400"}
+              flex items-center gap-5
+              py-5 px-4 rounded-2xl 
+              hover:text-amber-400 hover:text-shadow-none
+              `}
           >
             <span>{league.toUpperCase()}</span>
             <div className="w-10 h-10">

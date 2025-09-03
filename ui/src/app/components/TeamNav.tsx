@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const TeamNav = ({
   league,
@@ -7,6 +10,8 @@ const TeamNav = ({
   league: string;
   teams: string[] | string[][];
 }) => {
+  const pathname = usePathname();
+
   return (
     <nav
       className="
@@ -20,21 +25,21 @@ const TeamNav = ({
       [scrollbar-color:#fee685_transparent]
       [scrollbar-width:thin]
       rounded-2xl
-      shadow-md shadow-amber-200
-      inset-shadow-sm inset-shadow-amber-200
-      bg-linear-to-tr from-amber-200/30 from-0% via-zinc-900/5 via-50% to-amber-200/30 to-100%
+      shadow-sm shadow-amber-200 inset-shadow-sm inset-shadow-amber-200
+      bg-linear-to-tr from-amber-200/50 from-0% via-amber-500/40 via-50% to-amber-200/50 to-100%
       "
     >
       {teams.map((team) => (
         <Link key={team[0]} href={`/${league}/${team[0]}`}>
           <div
-            className="
+            className={`
+              ${pathname === `/${league}/${team[0]}` && "text-amber-400"}
             text-amber-100 text-xl font-medium
-            text-shadow-sm text-shadow-amber-400
+            text-shadow-xs text-shadow-amber-400
             text-center
             rounded-2xl
             md:text-start
-            hover:text-amber-400"
+            hover:text-amber-400`}
           >
             {team[1]}
           </div>

@@ -33,8 +33,8 @@ const FilterBar = () => {
     <Form
       action=""
       className="
-      flex flex-col justify-evenly items-center gap-y-5
-      md:flex-row md:self-center md:gap-10 md:items-baseline
+      flex flex-col flex-wrap justify-evenly items-center gap-y-5 
+      md:flex-row md:self-center md:gap-x-20 md:items-baseline
       "
     >
       <FilterInput

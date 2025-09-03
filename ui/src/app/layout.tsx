@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
+import { Josefin_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
 import LeagueNav from "./components/LeagueNav";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
+
+const josefinSans = Josefin_Sans({
   subsets: ["latin"],
 });
 
@@ -34,7 +39,7 @@ export default function RootLayout({
     >
       <body
         className={`
-          ${geistSans.variable} ${geistMono.variable} antialiased
+          ${josefinSans.className} antialiased
           pb-24
           flex flex-col gap-10
           `}
