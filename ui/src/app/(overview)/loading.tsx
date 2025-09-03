@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import FilterBar from "../components/FilterBar";
 
 const Loading = () => {
   return (
     <div className="w-full h-screen flex flex-col items-center gap-12 rounded-2xl bg-sky-100/10">
-      <FilterBar />
+      <Suspense fallback={null}>
+        <FilterBar />
+      </Suspense>
       <h3 className="text-sky-200 text-4xl font-bold">
         Loading giveaways . . .
       </h3>

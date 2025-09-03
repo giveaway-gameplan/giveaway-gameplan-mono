@@ -2,6 +2,7 @@ import FilterBar from "./FilterBar";
 import CurrentDayEventList from "./CurrentDayEventList";
 import EventList from "./EventList";
 import { monthNames } from "../lib/sport-options";
+import { Suspense } from "react";
 
 interface PELProps {
   league?: string;
@@ -14,7 +15,9 @@ const PageEventLists = ({ league, team, date, dow }: PELProps) => {
   if (!date && !dow) {
     return (
       <div className="flex flex-col gap-12 rounded-2xl bg-sky-100/10">
-        <FilterBar />
+        <Suspense fallback={null}>
+          <FilterBar />
+        </Suspense>
         <div className="flex flex-col items-center gap-10 mx-10">
           <h3 className="text-sky-200 text-4xl font-bold">
             Today&apos;s Giveaways
