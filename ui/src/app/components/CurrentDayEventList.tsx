@@ -31,8 +31,12 @@ export default function EventList({ league, team }: Props) {
         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
         const data: Event[] = await res.json();
         setEvents(data);
-      } catch (e: any) {
-        setError(e.message ?? "Unknown error");
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setError(e.message);
+        } else {
+          setError("Unknown error");
+        }
       }
     };
 

@@ -16,7 +16,9 @@ const PageEventLists = ({ league, team, date, dow }: PELProps) => {
       <div className="flex flex-col gap-12 rounded-2xl bg-sky-100/10">
         <FilterBar />
         <div className="flex flex-col items-center gap-10 mx-10">
-          <h3 className="text-sky-200 text-4xl font-bold">Today's Giveaways</h3>
+          <h3 className="text-sky-200 text-4xl font-bold">
+            Today&apos;s Giveaways
+          </h3>
           <CurrentDayEventList league={league} team={team} />
         </div>
         <div className="flex flex-col items-center gap-5 mx-10">
