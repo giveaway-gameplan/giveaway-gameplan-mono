@@ -12,7 +12,7 @@ const LeagueNav = () => {
     <nav
       className="
       w-11/12
-      flex flex-row flex-nowrap overflow-auto justify-evenly self-center
+      flex flex-row flex-nowrap overflow-auto overflow-y-hidden justify-evenly self-center
       [-ms-overflow-style:auto]
       [scrollbar-color:#fee685_transparent]
       [scrollbar-width:thin]

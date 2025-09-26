@@ -29,7 +29,7 @@ const EventCard = ({ event }: { event: Event }) => {
       >
         {event.event_name}
       </p>
-      <div className="flex flex-row items-center justify-center gap-x-6">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-x-6">
         <CalendarIcon
           date={event.description.split(" on")[1].split(" at")[0].split(",")[0]}
         />

@@ -14,7 +14,7 @@ interface PELProps {
 const PageEventLists = ({ league, team, date, dow }: PELProps) => {
   if (!date && !dow) {
     return (
-      <div className="flex flex-col gap-12 rounded-2xl bg-sky-100/10">
+      <div className="flex flex-col gap-12 rounded-2xl bg-sky-100/10 pb-10">
         <Suspense fallback={null}>
           <FilterBar />
         </Suspense>
@@ -33,7 +33,7 @@ const PageEventLists = ({ league, team, date, dow }: PELProps) => {
   } else if (date) {
     const [y, m, d] = date.split("-");
     return (
-      <div className="flex flex-col gap-10 rounded-2xl bg-sky-100/10">
+      <div className="flex flex-col gap-10 rounded-2xl bg-sky-100/10 pb-10">
         <FilterBar />
         <div className="flex flex-col items-center gap-10 mx-10">
           <h3 className="text-sky-200 text-4xl font-bold">
@@ -45,7 +45,7 @@ const PageEventLists = ({ league, team, date, dow }: PELProps) => {
     );
   } else if (dow) {
     return (
-      <div className="flex flex-col gap-10 rounded-2xl bg-sky-100/10">
+      <div className="flex flex-col gap-10 rounded-2xl bg-sky-100/10 pb-10">
         <FilterBar />
         <div className="flex flex-col items-center gap-10 mx-10">
           <h3 className="text-sky-200 text-4xl font-bold">

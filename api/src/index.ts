@@ -10,6 +10,8 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors());
 // app.use(cors({ origin: 'http://localhost:3000' }));
+// Right now you’re using app.use(cors()); which allows any origin.
+//In prod, you may want cors({ origin: "https://giveawaygameplan.com" }).
 
 app.use('/api/v1/events', eventRouter);
 

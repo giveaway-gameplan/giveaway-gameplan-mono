@@ -17,9 +17,9 @@ const TeamNav = ({
       className="
       w-11/12
       flex 
-      flex-row flex-nowrap overflow-auto justify-evenly self-center
+      flex-row flex-nowrap overflow-auto overflow-y-hidden justify-evenly self-center
       gap-5
-      md:flex-col md:flex-nowrap md:self-start
+      md:flex-col md:flex-nowrap md:self-start md:overflow-y-auto
       md:h-200 md:max-w-60 md:min-w-52 md:ml-5 md:pl-5 md:py-5
       [-ms-overflow-style:auto]
       [scrollbar-color:#fee685_transparent]

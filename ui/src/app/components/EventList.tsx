@@ -16,7 +16,7 @@ export default async function EventList({
   // const formattedDate = today.toISOString().split("T")[0];
   // if (!dow && !date) date = formattedDate;
 
-  const base = process.env.NEXT_PUBLIC_API_BASE_URL!;
+  const base = process.env.INTERNAL_API_BASE_URL!;
   const url = new URL("/api/v1/events", base);
 
   const searchParams = new URLSearchParams();
@@ -45,7 +45,7 @@ export default async function EventList({
       <ul
         className="
         w-full
-        flex flex-row flex-nowrap overflow-auto justify-center-safe
+        flex flex-row flex-nowrap overflow-auto overflow-y-hidden justify-center-safe
         gap-10
         [-ms-overflow-style:auto]
         [scrollbar-color:#11c8e0_transparent]

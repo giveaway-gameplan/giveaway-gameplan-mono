@@ -64,7 +64,7 @@ export default function EventList({ league, team }: Props) {
     <ul
       className="
         w-full
-        flex flex-row flex-nowrap overflow-auto justify-evenly
+        flex flex-row flex-nowrap overflow-auto overflow-y-hidden justify-evenly
         gap-10
         [-ms-overflow-style:auto]
         [scrollbar-color:#11c8e0_transparent]
