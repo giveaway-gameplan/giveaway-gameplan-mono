@@ -1,4 +1,4 @@
-const formatEventName = (text) => {
+const formatEventName = (text: string) => {
   let headingText = text;
 
   if (headingText.includes("//")) {

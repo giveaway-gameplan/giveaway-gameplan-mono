@@ -1,4 +1,6 @@
-const mlbTeams = {
+import { TeamList } from "./types";
+
+const mlbTeams: TeamList = {
   diamondbacks: {
     league: "mlb",
     url: "https://www.mlb.com/dbacks/tickets/promotions",
@@ -329,4 +331,4 @@ const mlbTeams = {
   },
 };
 
-module.exports = mlbTeams;
+export default mlbTeams;

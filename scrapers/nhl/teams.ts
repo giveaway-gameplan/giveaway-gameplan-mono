@@ -107,4 +107,4 @@ const nhlTeams = {
   // },
 };
 
-module.exports = nhlTeams;
+export default nhlTeams;

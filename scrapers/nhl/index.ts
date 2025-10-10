@@ -1,5 +1,5 @@
-const puppeteer = require("puppeteer");
-const nhlTeams = require("./teams");
+import puppeteer from "puppeteer";
+import nhlTeams from "./teams";
 
 const URL = "http://localhost:4000/api/v1/events/batch";
 
