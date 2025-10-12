@@ -13,6 +13,9 @@ interface PELProps {
 
 const PageEventLists = ({ league, team, date, dow }: PELProps) => {
   if (!date && !dow) {
+    const currentMonth = new Date().getMonth() + 1;
+    const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+    const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     return (
       <div className="flex flex-col gap-12 rounded-2xl bg-sky-100/10 pb-10">
         <Suspense fallback={null}>
@@ -20,13 +23,31 @@ const PageEventLists = ({ league, team, date, dow }: PELProps) => {
         </Suspense>
         <div className="flex flex-col items-center gap-10 mx-10">
           <h3 className="text-sky-200 text-4xl font-bold">
-            Today&apos;s Giveaways
+            Today&apos;s giveaways
           </h3>
           <CurrentDayEventList league={league} team={team} />
         </div>
         <div className="flex flex-col items-center gap-5 mx-10">
-          <h3 className="text-sky-200 text-4xl font-bold">All Giveaways</h3>
-          <EventList league={league} team={team} />
+          <h3 className="text-sky-200 text-4xl font-bold">
+            All giveaways this month
+          </h3>
+          <EventList
+            league={league}
+            team={team}
+            month={currentMonth.toString()}
+          />
+        </div>
+        <div className="flex flex-col items-center gap-5 mx-10">
+          <h3 className="text-sky-200 text-4xl font-bold">
+            All giveaways next month
+          </h3>
+          <EventList league={league} team={team} month={nextMonth.toString()} />
+        </div>
+        <div className="flex flex-col items-center gap-5 mx-10">
+          <h3 className="text-sky-200 text-4xl font-bold">
+            All giveaways last month
+          </h3>
+          <EventList league={league} team={team} month={prevMonth.toString()} />
         </div>
       </div>
     );

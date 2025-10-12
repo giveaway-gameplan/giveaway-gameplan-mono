@@ -58,11 +58,12 @@ export const getEventById = async (req: Request, res: Response, next: NextFuncti
 // };
 
 export const getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
-  const { league, team, date, dow } = req.query as {
+  const { league, team, date, dow, month } = req.query as {
     league?: string;
     team?: string;
     date?: string;
     dow?: string;
+    month?: string;
   };
 
   if (date && dow) {
@@ -72,7 +73,7 @@ export const getAllEvents = async (req: Request, res: Response, next: NextFuncti
 
   try {
     const filters: string[] = [];
-    const values: string[] = [];
+    const values: (string | number)[] = [];
 
     if (league) {
       filters.push(`league = $${values.length + 1}`);
@@ -92,6 +93,11 @@ export const getAllEvents = async (req: Request, res: Response, next: NextFuncti
     if (dow) {
       filters.push(`day_of_week = $${values.length + 1}`);
       values.push(dow);
+    }
+
+    if (month) {
+      filters.push(`EXTRACT(MONTH FROM start_date) = $${values.length + 1}`);
+      values.push(Number(month));
     }
 
     const whereClause = filters.length > 0 ? `WHERE ${filters.join(' AND ')}` : '';

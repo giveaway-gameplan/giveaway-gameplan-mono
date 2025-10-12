@@ -6,11 +6,13 @@ export default async function EventList({
   team,
   date,
   dow,
+  month,
 }: {
   league?: string;
   team?: string;
   date?: string;
   dow?: string;
+  month?: string;
 }) {
   // const today = new Date();
   // const formattedDate = today.toISOString().split("T")[0];
@@ -24,6 +26,7 @@ export default async function EventList({
   if (team) searchParams.append("team", team);
   if (date) searchParams.append("date", date);
   if (dow) searchParams.append("dow", dow);
+  if (month) searchParams.append("month", month);
   if (searchParams.toString()) url.search = searchParams.toString();
 
   try {
@@ -34,12 +37,7 @@ export default async function EventList({
     const events: Event[] = await response.json();
 
     if (events && events.length === 0)
-      return (
-        <div className="text-sky-200/50 text-2xl">
-          No day is your lucky day. There ane no giveaways for the foreseeable
-          future!
-        </div>
-      );
+      return <div className="text-sky-200/50 text-2xl">No giveaways found</div>;
 
     return (
       <ul
