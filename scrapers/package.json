@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
+    "manual": "ts-node manual_entry/nhl/index.ts",
     "mlb": "ts-node mlb/index.ts",
     "nhl": "ts-node nhl/index.ts",
+    "start:manual": "node dist/manual_entry/index.js",
     "start:mlb": "node dist/mlb/index.js",
     "start:nhl": "node dist/nhl/index.js"
   },
@@ -14,6 +16,7 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^24.7.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {

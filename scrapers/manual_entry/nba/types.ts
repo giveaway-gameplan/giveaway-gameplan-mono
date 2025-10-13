@@ -287,7 +287,7 @@ type TimeAndZone =
   | "10:30PM CST"
   | "6:45PM EST";
 
-export interface NhlEvent {
+export interface NbaEvent {
   league: League;
   teamName: TeamName;
   eventName: string;

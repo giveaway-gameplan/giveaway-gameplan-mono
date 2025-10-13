@@ -16,7 +16,12 @@ const EventCard = ({ event }: { event: Event }) => {
      "
     >
       <p className="text-xl">{event.team_name.toUpperCase()}</p>
-      <p>VS {event.matchup.split(" at")[0]}</p>
+      <p>
+        VS{" "}
+        {event.matchup.includes(" at ")
+          ? event.matchup.split(" at")[0]
+          : event.matchup}
+      </p>
       <div className="w-20 h-20 mb-7">
         <BallIcon league={event.league} />
       </div>
