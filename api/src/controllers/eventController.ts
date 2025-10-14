@@ -37,11 +37,6 @@ export const getEventById = async (req: Request, res: Response, next: NextFuncti
   } catch (error) {
     next(error);
   }
-
-  // Optional improvements
-  // validate with Zod or Joi
-  // log not-found attempts (only if useful for audit/debug)
-  //      console.warn(`GET /events/${id} - Not found`);
 };
 
 // export const getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
@@ -184,10 +179,6 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
   } catch (err) {
     next(err);
   }
-
-  // optional
-  // Use Zod or Joi for proper runtime validation of req.body, especially if the API is public-facing.
-  // Trim strings or sanitize inputs before inserting to avoid junk data.
 };
 
 // consider something like EXTRACT(DOW FROM start_date) instead of having the scraper do it?
@@ -234,10 +225,6 @@ export const createManyEvents = async (req: Request, res: Response, next: NextFu
   } catch (err) {
     next(err);
   }
-  // OPTIONAL
-  // Validate each event using Zod/Joi if you're worried about malformed input.
-  // Wrap the query in a transaction if this table has dependencies (e.g. foreign keys).
-  // Use a map function instead of forEach if you prefer functional style (but you’d need to flatten a 2D array).
 };
 
 export const deleteEventById = async (req: Request, res: Response, next: NextFunction) => {
@@ -265,9 +252,21 @@ export const deleteEventById = async (req: Request, res: Response, next: NextFun
   } catch (error) {
     next(error);
   }
-  // OPTIONAL
-  // Add logging for successful or failed deletions if you want an audit trail.
-  // If this endpoint is protected, make sure you're validating auth/ownership upstream.
+};
+
+export const deleteNHLEvents = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { rowCount }: QueryResult = await pool.query('DELETE FROM events WHERE league = $1;', [
+      'nhl',
+    ]);
+
+    res.status(200).json({
+      message: 'All NHL events deleted successfully',
+      deletedCount: rowCount,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const deleteAllEvents = async (req: Request, res: Response, next: NextFunction) => {
@@ -281,7 +280,4 @@ export const deleteAllEvents = async (req: Request, res: Response, next: NextFun
   } catch (err) {
     next(err);
   }
-  // OPTIONAL
-  // Add a confirmation step or auth middleware for safety. Deleting everything is a dangerous operation, especially in production.
-  // Wrap in a transaction if deleting from related tables (e.g. dependent child tables), to ensure atomic cleanup.
 };

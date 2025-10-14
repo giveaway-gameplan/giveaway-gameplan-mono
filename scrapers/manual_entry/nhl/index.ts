@@ -1,15 +1,15 @@
 // pnpm run manual
-// import events from "./temp_data";
 import events from "./data";
+import { NhlEvent } from "./types";
 
 const URL = "http://localhost:4000/api/v1/events/batch";
 
-const pushToDB = async () => {
+const pushToDB = async (partialEventsArray: NhlEvent[]) => {
   try {
     const response = await fetch(URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(events),
+      body: JSON.stringify(partialEventsArray),
     });
     if (!response.ok) {
       throw new Error(`Failed to post data: ${response.statusText}`);
@@ -21,7 +21,17 @@ const pushToDB = async () => {
   }
 };
 
-const validateAndPushData = () => {
+// Helper function to chunk an array into smaller arrays of a given size
+const chunkArray = (array: NhlEvent[], size: number): NhlEvent[][] => {
+  const chunks: NhlEvent[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
+};
+
+const validateAndPushData = async () => {
+  console.log("Length of events array: ", events.length);
   const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
   const descriptionRegex =
     /^ on [A-Z][a-z]+ \d{1,2}, \d{4} at \d{1,2}:\d{2} (a|p)\.m\.$/;
@@ -55,9 +65,14 @@ const validateAndPushData = () => {
     console.error(
       `Validation failed for ${invalidEvents.length} of ${events.length} events.`
     );
+    return;
   } else {
     console.log("All events valid. Proceeding to push...");
-    pushToDB();
+    const chunks = chunkArray(events, 30);
+    for (const [index, chunk] of chunks.entries()) {
+      console.log(`Pushing batch ${index + 1} of ${chunks.length}`);
+      await pushToDB(chunk);
+    }
   }
 };
 

@@ -73,8 +73,7 @@ type MatchupTeam =
   | "Colorado Avalanche"
   | "Buffalo Sabres"
   | "Chicago Blackhawks"
-  | "Detroit Red Wings"
-  | "All October Games";
+  | "Detroit Red Wings";
 
 type Location =
   | "Honda Center"

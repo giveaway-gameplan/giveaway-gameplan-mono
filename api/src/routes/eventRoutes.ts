@@ -6,16 +6,18 @@ import {
   createEvent,
   createManyEvents,
   deleteEventById,
+  deleteNHLEvents,
   deleteAllEvents,
 } from '../controllers/eventController.js';
 
 const router = Router();
 
-router.get('/:id', getEventById);
+router.get('/single/:id', getEventById);
 router.get('/', getAllEvents);
-router.post('/', createEvent);
+router.post('/single', createEvent);
 router.post('/batch', createManyEvents);
-router.delete('/:id', deleteEventById);
-router.delete('/', deleteAllEvents);
+router.delete('/single/:id', deleteEventById);
+router.delete('/batch/nhl', deleteNHLEvents);
+router.delete('/batch', deleteAllEvents);
 
 export default router;
