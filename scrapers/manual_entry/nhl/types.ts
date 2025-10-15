@@ -30,7 +30,9 @@ type TeamName =
   | "flames"
   | "predators"
   | "flyers"
-  | "canucks";
+  | "canucks"
+  | "coyotes"
+  | "mapleleafs";
 
 type DayOfWeek =
   | "monday"

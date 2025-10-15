@@ -14,10 +14,6 @@ export default async function EventList({
   dow?: string;
   month?: string;
 }) {
-  // const today = new Date();
-  // const formattedDate = today.toISOString().split("T")[0];
-  // if (!dow && !date) date = formattedDate;
-
   const base = process.env.INTERNAL_API_BASE_URL!;
   const url = new URL("/api/v1/events", base);
 

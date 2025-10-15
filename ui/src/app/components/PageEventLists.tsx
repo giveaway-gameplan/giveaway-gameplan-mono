@@ -1,21 +1,21 @@
 import FilterBar from "./FilterBar";
 import CurrentDayEventList from "./CurrentDayEventList";
 import EventList from "./EventList";
-import { monthNames } from "../lib/sport-options";
 import { Suspense } from "react";
+import FilteredEventList from "./FilteredEventList";
 
 interface PELProps {
   league?: string;
   team?: string;
   date?: string;
   dow?: string;
+  month?: string;
 }
 
-const PageEventLists = ({ league, team, date, dow }: PELProps) => {
-  if (!date && !dow) {
-    const currentMonth = new Date().getMonth() + 1;
-    const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
-    const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+const currentMonth = new Date().getMonth() + 1;
+
+const PageEventLists = ({ league, team, date, dow, month }: PELProps) => {
+  if (!date && !dow && !month) {
     return (
       <div className="flex flex-col gap-12 rounded-2xl bg-sky-100/10 pb-10">
         <Suspense fallback={null}>
@@ -37,44 +37,17 @@ const PageEventLists = ({ league, team, date, dow }: PELProps) => {
             month={currentMonth.toString()}
           />
         </div>
-        <div className="flex flex-col items-center gap-5 mx-10">
-          <h3 className="text-sky-200 text-4xl font-bold">
-            All giveaways next month
-          </h3>
-          <EventList league={league} team={team} month={nextMonth.toString()} />
-        </div>
-        <div className="flex flex-col items-center gap-5 mx-10">
-          <h3 className="text-sky-200 text-4xl font-bold">
-            All giveaways last month
-          </h3>
-          <EventList league={league} team={team} month={prevMonth.toString()} />
-        </div>
       </div>
     );
-  } else if (date) {
-    const [y, m, d] = date.split("-");
+  } else {
     return (
-      <div className="flex flex-col gap-10 rounded-2xl bg-sky-100/10 pb-10">
-        <FilterBar />
-        <div className="flex flex-col items-center gap-10 mx-10">
-          <h3 className="text-sky-200 text-4xl font-bold">
-            Giveaways on {`${monthNames[parseInt(m) - 1]} ${d}, ${y}`}
-          </h3>
-          <EventList league={league} team={team} date={date} />
-        </div>
-      </div>
-    );
-  } else if (dow) {
-    return (
-      <div className="flex flex-col gap-10 rounded-2xl bg-sky-100/10 pb-10">
-        <FilterBar />
-        <div className="flex flex-col items-center gap-10 mx-10">
-          <h3 className="text-sky-200 text-4xl font-bold">
-            Giveaways on {`${dow?.slice(0, 1).toUpperCase()}${dow?.slice(1)}s`}
-          </h3>
-          <EventList league={league} team={team} dow={dow} />
-        </div>
-      </div>
+      <FilteredEventList
+        league={league}
+        team={team}
+        date={date}
+        dow={dow}
+        month={month}
+      />
     );
   }
 };

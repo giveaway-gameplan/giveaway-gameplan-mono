@@ -5,7 +5,7 @@ export default async function MainPage({
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  const { date, dow } = await searchParams;
+  const { date, dow, month } = await searchParams;
 
-  return <PageEventLists date={date} dow={dow} />;
+  return <PageEventLists date={date} dow={dow} month={month} />;
 }

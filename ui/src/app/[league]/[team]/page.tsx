@@ -8,7 +8,15 @@ export default async function TeamPage({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const { league, team } = await params;
-  const { date, dow } = await searchParams;
+  const { date, dow, month } = await searchParams;
 
-  return <PageEventLists league={league} team={team} date={date} dow={dow} />;
+  return (
+    <PageEventLists
+      league={league}
+      team={team}
+      date={date}
+      dow={dow}
+      month={month}
+    />
+  );
 }

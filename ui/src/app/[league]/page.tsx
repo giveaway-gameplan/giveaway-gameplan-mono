@@ -8,7 +8,7 @@ export default async function LeaguePage({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const { league } = await params;
-  const { date, dow } = await searchParams;
+  const { date, dow, month } = await searchParams;
 
-  return <PageEventLists league={league} date={date} dow={dow} />;
+  return <PageEventLists league={league} date={date} dow={dow} month={month} />;
 }

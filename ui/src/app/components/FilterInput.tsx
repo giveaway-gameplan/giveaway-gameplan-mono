@@ -5,15 +5,16 @@ const FilterInput = ({
   handleChange,
   options,
   val,
+  label,
 }: {
   inputType: string;
   handleChange?: (
     selection: string,
-    keyToUpdate: "date" | "dow",
-    keyToClear: "date" | "dow"
+    keyToUpdate: "date" | "dow" | "month"
   ) => void;
   options?: string[];
   val: string;
+  label?: string;
 }) => {
   const baseStyles = `
   min-w-70
@@ -33,7 +34,7 @@ const FilterInput = ({
         type="date"
         className={baseStyles}
         onChange={(e) => {
-          if (handleChange) handleChange(e.target.value, "date", "dow");
+          if (handleChange) handleChange(e.target.value, "date");
         }}
       />
     );
@@ -44,12 +45,20 @@ const FilterInput = ({
           value={val}
           className={`${selectStyles} [appearance:none] [-webkit-appearance:none] bg-clip-padding`}
           onChange={(e) => {
-            if (handleChange) handleChange(e.target.value, "dow", "date");
+            const keyToUpdate = label === "Month" ? "month" : "dow";
+            if (handleChange) handleChange(e.target.value, keyToUpdate);
           }}
         >
-          <option value="">Day of the week</option>
+          <option value="">{label}</option>
           {options?.map((option) => (
-            <option key={option} value={option}>
+            <option
+              key={option}
+              value={
+                label === "Month"
+                  ? (options.indexOf(option) + 1).toString()
+                  : option
+              }
+            >
               {option.toUpperCase()}
             </option>
           ))}
