@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "manual": "ts-node manual_entry/nhl/index.ts",
+    "manual:nhl": "ts-node manual_entry/nhl/index.ts",
+    "manual:nba": "ts-node manual_entry/nba/index.ts",
     "mlb": "ts-node mlb/index.ts",
     "nhl": "ts-node nhl/index.ts",
     "start:manual": "node dist/manual_entry/index.js",

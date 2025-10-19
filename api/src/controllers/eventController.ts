@@ -269,6 +269,21 @@ export const deleteNHLEvents = async (req: Request, res: Response, next: NextFun
   }
 };
 
+export const deleteNBAEvents = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { rowCount }: QueryResult = await pool.query('DELETE FROM events WHERE league = $1;', [
+      'nba',
+    ]);
+
+    res.status(200).json({
+      message: 'All NBA events deleted successfully',
+      deletedCount: rowCount,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const deleteAllEvents = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { rowCount }: QueryResult = await pool.query('DELETE FROM events;');

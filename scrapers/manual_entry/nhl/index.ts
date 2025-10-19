@@ -21,7 +21,6 @@ const pushToDB = async (partialEventsArray: NhlEvent[]) => {
   }
 };
 
-// Helper function to chunk an array into smaller arrays of a given size
 const chunkArray = (array: NhlEvent[], size: number): NhlEvent[][] => {
   const chunks: NhlEvent[][] = [];
   for (let i = 0; i < array.length; i += size) {
