@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "manual:nhl": "ts-node manual_entry/nhl/index.ts",
-    "manual:nba": "ts-node manual_entry/nba/index.ts",
+    "manual:nhl": "ts-node manual-entry/nhl/index.ts",
+    "manual:nba": "ts-node manual-entry/nba/index.ts",
+    "manual:ahl": "ts-node manual-entry/ahl/index.ts",
+    "manual:nba-g-league": "ts-node manual-entry/nba-g-league/index.ts",
     "mlb": "ts-node mlb/index.ts",
     "nhl": "ts-node nhl/index.ts",
-    "start:manual": "node dist/manual_entry/index.js",
     "start:mlb": "node dist/mlb/index.js",
     "start:nhl": "node dist/nhl/index.js"
   },
