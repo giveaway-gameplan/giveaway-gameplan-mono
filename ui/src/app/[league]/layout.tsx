@@ -1,5 +1,12 @@
 import TeamNav from "../components/TeamNav";
-import { mlbTeams, nflTeams, nhlTeams, nbaTeams } from "../lib/sport-options";
+import {
+  mlbTeams,
+  nflTeams,
+  nhlTeams,
+  nbaTeams,
+  gleagueNbaTeams,
+  ahlTeams,
+} from "../lib/sport-options";
 
 export default async function Layout({
   children,
@@ -24,6 +31,12 @@ export default async function Layout({
       break;
     case "nba":
       teams = nbaTeams;
+      break;
+    case "gleaguenba":
+      teams = gleagueNbaTeams;
+      break;
+    case "ahl":
+      teams = ahlTeams;
       break;
   }
 

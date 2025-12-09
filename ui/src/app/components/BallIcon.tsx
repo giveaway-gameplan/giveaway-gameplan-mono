@@ -13,7 +13,13 @@ const BallIcon = ({ league }: { league: string | undefined }) => {
     case "nhl":
       icon = "/hockey-stick-sport-winter-svgrepo-com.svg";
       break;
+    case "ahl":
+      icon = "/hockey-stick-sport-winter-svgrepo-com.svg";
+      break;
     case "nba":
+      icon = "/basketball-svgrepo-com.svg";
+      break;
+    case "gleaguenba":
       icon = "/basketball-svgrepo-com.svg";
       break;
     default:

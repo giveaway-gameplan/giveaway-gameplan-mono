@@ -34,7 +34,9 @@ const LeagueNav = () => {
               hover:text-amber-400 hover:text-shadow-none
               `}
           >
-            <span>{league.toUpperCase()}</span>
+            <span>
+              {league === "gleaguenba" ? "NBA G League" : league.toUpperCase()}
+            </span>
             <div className="w-10 h-10">
               <BallIcon league={league} />
             </div>
