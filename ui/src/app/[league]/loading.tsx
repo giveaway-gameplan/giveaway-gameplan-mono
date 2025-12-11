@@ -7,7 +7,7 @@ const Loading = () => {
       <Suspense fallback={null}>
         <FilterBar />
       </Suspense>
-      <h3 className="text-sky-200 text-4xl font-bold">
+      <h3 className="text-[hsl(48,90%,95%)] text-4xl font-bold">
         Loading giveaways . . .
       </h3>
     </div>

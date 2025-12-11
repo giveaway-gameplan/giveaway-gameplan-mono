@@ -30,7 +30,7 @@ const FilteredEventList = ({ league, team, date, dow, month }: FELProps) => {
     <div className="flex flex-col gap-10 rounded-2xl bg-sky-100/10 pb-10">
       <FilterBar />
       <div className="flex flex-col items-center gap-10 mx-10">
-        <h3 className="text-sky-200 text-4xl font-bold">{h3Text}</h3>
+        <h3 className="text-[hsl(48,90%,95%)] text-4xl font-bold">{h3Text}</h3>
         <EventList
           league={league}
           team={team}

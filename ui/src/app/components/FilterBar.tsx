@@ -34,7 +34,7 @@ const FilterBar = () => {
   return (
     <div
       className="
-      flex flex-col flex-wrap justify-evenly items-center gap-y-5 
+      flex flex-col flex-wrap justify-evenly items-center gap-y-5 pt-2
       md:flex-row md:self-center md:gap-x-20 md:items-baseline
       "
     >

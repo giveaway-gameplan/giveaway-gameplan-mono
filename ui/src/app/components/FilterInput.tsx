@@ -18,11 +18,10 @@ const FilterInput = ({
 }) => {
   const baseStyles = `
   min-w-70
-  text-amber-100 font-bold
+  font-bold
   px-6 py-3 rounded-lg
-  shadow-sm shadow-amber-200
-  inset-shadow-sm inset-shadow-amber-200
-  bg-linear-to-tr from-amber-200/50 from-0% via-amber-500/40 via-50% to-amber-200/50 to-100%
+  bg-amber-500/60
+  shadow-[inset_2px_2px_10px_theme(colors.amber.950),inset_-2px_-2px_10px_theme(colors.amber.100),_0px_5px_5px_3px_hsl(231,20%,1%),_0px_-2px_7px_3px_hsl(231,20%,75%)]
   `;
 
   const selectStyles = `${baseStyles} appearance-none pr-10`;

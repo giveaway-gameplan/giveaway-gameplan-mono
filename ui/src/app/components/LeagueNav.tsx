@@ -14,24 +14,24 @@ const LeagueNav = () => {
       w-11/12
       flex flex-row flex-nowrap overflow-auto overflow-y-hidden justify-evenly self-center
       [-ms-overflow-style:auto]
-      [scrollbar-color:#fee685_transparent]
+      [scrollbar-color:hsl(48,90%,79%)_transparent]
       [scrollbar-width:thin]
       rounded-2xl
-      text-amber-100 text-2xl font-bold
-      text-shadow-xs text-shadow-amber-400
-      shadow-sm shadow-amber-200
-      inset-shadow-sm inset-shadow-amber-200
-      bg-linear-to-tr from-sky-300/40 from-0% via-sky-900/50 via-60% to-sky-200/50 to-100%
+      text-2xl font-bold
+      bg-[hsl(231,30%,15%)]
+      shadow-[inset_0px_0px_50px_hsl(231,20%,1%),_0px_5px_10px_10px_hsl(231,20%,1%),_-0px_-2px_25px_5px_hsl(231,20%,75%),_0px_0px_350px_hsl(231,20%,95%)]
+      snap-x snap-mandatory
       "
     >
       {leagues.map((league) => (
         <Link key={league} href={`/${league}`}>
           <div
             className={`
-              ${`/${pathname}` === `/${league}` && "text-amber-400"}
+              ${`/${pathname}` === `/${league}` && "text-[hsl(48,90%,50%)]"}
               flex items-center gap-5
               py-5 px-4 rounded-2xl 
-              hover:text-amber-400 hover:text-shadow-none
+              hover:text-[hsl(48,90%,50%)]
+              snap-center
               `}
           >
             <span>

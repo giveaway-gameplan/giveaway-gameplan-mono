@@ -33,17 +33,24 @@ export default async function EventList({
     const events: Event[] = await response.json();
 
     if (events && events.length === 0)
-      return <div className="text-sky-200/50 text-2xl">No giveaways found</div>;
+      return (
+        <div className="text-[hsl(48,90%,95%)] text-2xl">
+          No giveaways found
+        </div>
+      );
 
     return (
       <ul
         className="
         w-full
         flex flex-row flex-nowrap overflow-auto overflow-y-hidden justify-center-safe
+        px-8
         gap-10
         [-ms-overflow-style:auto]
-        [scrollbar-color:#11c8e0_transparent]
-        [scrollbar-width:thin]"
+        [scrollbar-color:hsl(48,90%,79%)_transparent]
+        [scrollbar-width:thin]
+        snap-x snap-mandatory
+        "
       >
         {events.map((event: Event) => (
           <EventCard key={event.id} event={event} />

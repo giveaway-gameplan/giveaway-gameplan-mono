@@ -22,9 +22,11 @@ export default function RootLayout({
     <html
       lang="en"
       className="
-        selection:bg-amber-500 selection:text-zinc-900
-        bg-sky-950
-        "
+      selection:bg-amber-500 selection:text-slate-900
+      bg-[hsl(231,89%,7%)]
+      text-[hsl(48,90%,85%)]
+      text-shadow-[hsl(231,20%,0%)] text-shadow-lg
+      "
     >
       <body
         className={`

@@ -6,14 +6,17 @@ const EventCard = ({ event }: { event: Event }) => {
   return (
     <li
       className="
-      text-sky-200 text-center font-extrabold
-      p-4 mb-4 rounded-2xl
+      text-center font-extrabold
+      p-4 mt-10 mb-10 rounded-2xl
       min-w-full md:min-w-120 md:w-120 h-140
-      shadow-md shadow-sky-200
-      inset-shadow-sm inset-shadow-sky-200
+      
+      bg-[hsl(231,30%,15%)]
+      shadow-[inset_0px_0px_70px_hsl(231,20%,1%),_0px_5px_10px_10px_hsl(231,20%,1%),_0px_-2px_8px_5px_hsl(231,20%,75%)]
+
       flex flex-col justify-between items-center
-      bg-linear-to-tr from-sky-300/20 from-0% via-sky-950/50 via-50% to-sky-300/20 to-100%
-     "
+      snap-center
+      text-shadow-none
+      "
     >
       <p className="text-xl">{event.team_name.toUpperCase()}</p>
       <p>
@@ -28,8 +31,9 @@ const EventCard = ({ event }: { event: Event }) => {
       <p
         className="
         w-full px-10 py-3 rounded-md
-        text-slate-300 text-2xl
-        bg-linear-to-tr from-amber-400/60 from-0% to-amber-600/60 to-100%
+        text-2xl
+        bg-amber-500/60
+        shadow-[inset_2px_2px_10px_theme(colors.amber.950),inset_-2px_-2px_10px_theme(colors.amber.100)]
         "
       >
         {event.event_name}

@@ -50,12 +50,10 @@ export default function EventList({ league, team }: Props) {
       </div>
     );
   if (events === null)
-    return (
-      <div className="text-sky-200/50 text-2xl font-bold">Loading . . .</div>
-    );
+    return <div className="text-2xl font-bold">Loading . . .</div>;
   if (events.length === 0)
     return (
-      <div className="text-sky-200/50 text-2xl">
+      <div className="text-shadow-none text-2xl">
         Today is not your lucky day. There ane no giveaways!
       </div>
     );
@@ -65,10 +63,12 @@ export default function EventList({ league, team }: Props) {
       className="
         w-full
         flex flex-row flex-nowrap overflow-auto overflow-y-hidden justify-evenly
+        px-8
         gap-10
         [-ms-overflow-style:auto]
-        [scrollbar-color:#11c8e0_transparent]
+        [scrollbar-color:hsl(48,90%,79%)_transparent]
         [scrollbar-width:thin]
+        snap-x snap-mandatory
       "
     >
       {events.map((event) => (
