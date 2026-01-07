@@ -7,8 +7,8 @@ const EventCard = ({ event }: { event: Event }) => {
     <li
       className="
       text-center font-extrabold
-      p-4 mt-10 mb-10 rounded-2xl
-      min-w-full md:min-w-120 md:w-120 h-140
+      p-4 mt-10 mb-10 mx-5 rounded-2xl
+      min-w-full min-h-fit md:min-w-120 md:w-120 h-140
       
       bg-[hsl(231,30%,15%)]
       shadow-[inset_0px_0px_70px_hsl(231,20%,1%),_0px_5px_10px_10px_hsl(231,20%,1%),_0px_-2px_8px_5px_hsl(231,20%,75%)]
@@ -31,7 +31,6 @@ const EventCard = ({ event }: { event: Event }) => {
       <p
         className="
         w-full px-10 py-3 rounded-md
-        text-2xl
         bg-amber-500/60
         shadow-[inset_2px_2px_10px_theme(colors.amber.950),inset_-2px_-2px_10px_theme(colors.amber.100)]
         "
