@@ -3,7 +3,7 @@ import FilterBar from "../components/FilterBar";
 
 const Loading = () => {
   return (
-    <div className="w-full h-screen flex flex-col items-center gap-12 rounded-2xl bg-sky-100/10">
+    <div className="w-full h-screen flex flex-col items-center gap-12 rounded-2xl bg-white/4 backdrop-blur-[1px]">
       <Suspense fallback={null}>
         <FilterBar />
       </Suspense>

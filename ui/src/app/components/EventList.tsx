@@ -34,9 +34,7 @@ export default async function EventList({
 
     if (events && events.length === 0)
       return (
-        <div className="text-[hsl(48,90%,95%)] text-2xl">
-          No giveaways found
-        </div>
+        <div className="text-shadow-none text-2xl">No giveaways found</div>
       );
 
     return (

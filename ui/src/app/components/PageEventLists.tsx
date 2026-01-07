@@ -17,7 +17,7 @@ const currentMonth = new Date().getMonth() + 1;
 const PageEventLists = ({ league, team, date, dow, month }: PELProps) => {
   if (!date && !dow && !month) {
     return (
-      <div className="text-[hsl(48,90%,95%)] flex flex-col gap-12 rounded-2xl bg-sky-100/10 pb-10">
+      <div className="text-[hsl(48,90%,95%)] flex flex-col gap-12 rounded-2xl bg-white/4 backdrop-blur-[1px] pb-10">
         <Suspense fallback={null}>
           <FilterBar />
         </Suspense>
