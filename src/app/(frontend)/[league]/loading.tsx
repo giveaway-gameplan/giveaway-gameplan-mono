@@ -1,15 +1,11 @@
-import { Suspense } from 'react'
-import FilterBar from '../components/FilterBar'
+import { EventCardsSkeleton } from '@/components/EventCards'
+import { Skeleton } from '@/components/ui/skeleton'
 
-const Loading = () => {
-  return (
-    <div className="w-full h-screen flex flex-col items-center gap-12 rounded-2xl bg-white/4 backdrop-blur-[1px]">
-      <Suspense fallback={null}>
-        <FilterBar />
-      </Suspense>
-      <h3 className="text-[hsl(48,90%,95%)] text-4xl font-bold">Loading giveaways . . .</h3>
-    </div>
-  )
-}
+const Loading = () => (
+  <div className="space-y-8">
+    <Skeleton className="h-8 w-56" />
+    <EventCardsSkeleton count={6} />
+  </div>
+)
 
 export default Loading

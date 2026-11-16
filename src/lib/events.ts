@@ -25,7 +25,7 @@ export type EventCardData = {
   title: string
   teamName: string
   opponentName: string | null
-  sport: Sport | null
+  leagueName: string | null
   day: string
   dayOfWeek: DayOfWeek
   time: string | null
@@ -113,7 +113,7 @@ const toCard = (event: Event): EventCardData => {
     title: event.title,
     teamName: team?.name ?? '',
     opponentName: asDoc(event.opponent)?.name ?? null,
-    sport: asDoc(event.league)?.sport ?? null,
+    leagueName: asDoc(event.league)?.name ?? null,
     day: storedDateToDay(event.date),
     dayOfWeek: event.dayOfWeek ?? DAYS_OF_WEEK[new Date(event.date).getUTCDay()],
     time: event.time ?? null,
@@ -159,11 +159,12 @@ export const getEventCards = async (filters: EventFilters): Promise<EventCardDat
     depth: 1,
     populate: {
       teams: { name: true, venue: true, promotionsUrl: true },
-      leagues: { sport: true },
+      leagues: { name: true },
     },
   })
 
-  return docs.map(toCard)
+  // The league badge only helps on pages that mix leagues.
+  return docs.map(toCard).map((card) => (filters.league ? { ...card, leagueName: null } : card))
 }
 
 export const currentMonth = (): string => String(Number(todayIn(SITE_TIME_ZONE).split('-')[1]))

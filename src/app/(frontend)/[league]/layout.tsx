@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation'
 
+import TeamNav from '@/components/TeamNav'
 import { getLeague, getTeams } from '@/lib/events'
-
-import TeamNav from '../components/TeamNav'
 
 export default async function Layout({
   children,
@@ -18,9 +17,9 @@ export default async function Layout({
   const teams = await getTeams(league.id)
 
   return (
-    <div className="flex flex-col md:flex-row gap-10 md:mr-10">
+    <div className="grid gap-6 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-10">
       <TeamNav league={league.slug} teams={teams} />
-      <div className="w-full max-w-screen overflow-x-hidden">{children}</div>
+      <div>{children}</div>
     </div>
   )
 }

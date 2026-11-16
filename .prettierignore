@@ -6,3 +6,4 @@ src/seed/data
 src/app/(payload)
 scrapers
 public
+src/components/ui

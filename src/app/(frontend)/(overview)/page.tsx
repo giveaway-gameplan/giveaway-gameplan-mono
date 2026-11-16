@@ -1,6 +1,6 @@
 import { parseFilters } from '@/lib/events'
 
-import PageEventLists from '../components/PageEventLists'
+import PageEventLists from '@/components/PageEventLists'
 
 export default async function MainPage({
   searchParams,

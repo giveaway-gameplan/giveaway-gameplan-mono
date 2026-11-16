@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { getEventsOnDay } from '@/lib/actions'
 import type { EventCardData } from '@/lib/events'
 
-import EventCards from './EventCards'
+import EventCards, { EmptyState, EventCardsSkeleton } from './EventCards'
 
 // en-CA formats dates as YYYY-MM-DD, in the visitor's own timezone.
 const localToday = () => new Intl.DateTimeFormat('en-CA').format(new Date())
@@ -28,14 +28,9 @@ export default function TodayEventList({ league, team }: { league?: string; team
     }
   }, [league, team])
 
-  if (failed) return <div className="text-rose-500 text-2xl font-bold">[ Error fetching data ]</div>
-  if (events === null) return <div className="text-2xl font-bold">Loading . . .</div>
-  if (events.length === 0)
-    return (
-      <div className="text-shadow-none text-2xl">
-        Today is not your lucky day. There are no giveaways!
-      </div>
-    )
+  if (failed) return <EmptyState>Today’s giveaways couldn’t be loaded. Try refreshing.</EmptyState>
+  if (events === null) return <EventCardsSkeleton />
+  if (events.length === 0) return <EmptyState>No giveaways today.</EmptyState>
 
   return <EventCards events={events} />
 }
