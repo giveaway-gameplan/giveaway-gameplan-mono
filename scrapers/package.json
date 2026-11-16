@@ -1,31 +1,19 @@
 {
-  "name": "giveaway-gameplan",
-  "version": "1.0.0",
+  "name": "giveaway-gameplan-scrapers",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Local-only scripts that scrape team promotion pages into the Giveaway Gameplan CMS",
   "scripts": {
-    "build": "tsc",
-    "manual:nhl": "ts-node manual-entry/nhl/index.ts",
-    "manual:nba": "ts-node manual-entry/nba/index.ts",
-    "manual:ahl": "ts-node manual-entry/ahl/index.ts",
-    "manual:nba-g-league": "ts-node manual-entry/nba-g-league/index.ts",
-    "mlb": "ts-node mlb/index.ts",
-    "nhl": "ts-node nhl/index.ts",
-    "start:mlb": "node dist/mlb/index.js",
-    "start:nhl": "node dist/nhl/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@types/node": "^24.7.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "mlb": "tsx --env-file-if-exists=.env mlb/index.ts",
+    "nhl": "tsx --env-file-if-exists=.env nhl/index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "cheerio": "^1.0.0",
-    "puppeteer": "^24.10.0",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-adblocker": "^2.13.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "puppeteer": "^25.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "tsx": "^4.23.15",
+    "typescript": "6.0.3"
   }
 }

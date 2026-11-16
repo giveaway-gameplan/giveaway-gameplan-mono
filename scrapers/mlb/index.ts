@@ -1,15 +1,29 @@
 import puppeteer from "puppeteer";
 import mlbTeams from "./teams";
-const { formatEventName, weekdayLowercaseFromStart } = require("./utils");
-import { TeamConfig, RawEvent, FormattedEvent, PuppeteerPage } from "./types";
+import { pushEvents, ScrapedEvent } from "../lib/payload";
+import { TeamConfig, RawEvent, PuppeteerPage } from "./types";
 
-const URL = "http://localhost:4000/api/v1/events/batch";
+/** Promotion headings look like "Presented by X // Bobblehead" or span several lines. */
+const formatEventName = (text: string): string => {
+  if (text.includes("//")) return (text.split("//")[1] ?? "").trim();
+  return (text.split("\n")[0] ?? "").trim();
+};
+
+/** The calendar day at the ballpark for a start time given in any ISO form. */
+const localDay = (startDate: string | undefined, timeZone: string): string => {
+  if (!startDate) return "";
+  // A date, or a date-time with no offset, is already the ballpark's wall clock.
+  if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(startDate)) return startDate.slice(0, 10);
+  const instant = new Date(startDate);
+  if (Number.isNaN(instant.getTime())) return "";
+  return new Intl.DateTimeFormat("en-CA", { timeZone }).format(instant);
+};
 
 const scrapeMLB = async (
   page: PuppeteerPage,
   teamConfig: TeamConfig,
   teamName: string
-): Promise<FormattedEvent[]> => {
+): Promise<ScrapedEvent[]> => {
   try {
     await page.goto(teamConfig.url);
     await page.waitForSelector(teamConfig.giveawayList);
@@ -36,39 +50,6 @@ const scrapeMLB = async (
             const script =
               listItem.querySelector<HTMLScriptElement>(giveawayScript);
 
-            // if (script?.tagName === "SCRIPT" && script.textContent) {
-            //   let json = {};
-            //   const jsonText = script?.textContent;
-            //   if (jsonText) {
-            //     try {
-            //       json = JSON.parse(jsonText);
-            //     } catch (e) {
-            //       // ignore
-            //     }
-            //   }
-
-            //   if (json["@type"] === "SportsEvent") {
-            //     eventInfo.matchup = json.name || "";
-            //     eventInfo.startDate = json.startDate || "";
-            //     eventInfo.endDate = json.endDate || "";
-            //     eventInfo.description = json.description?.trim() || "";
-
-            //     const onIndex = eventInfo.description.indexOf(" on ");
-            //     const atIndex = eventInfo.description.indexOf(" at ", onIndex);
-
-            //     if (onIndex !== -1 && atIndex !== -1) {
-            //       const timeAndZone = eventInfo.description
-            //         .substring(atIndex + 4)
-            //         .trim();
-
-            //       eventInfo.timeAndZone = timeAndZone || "";
-            //     }
-
-            //     eventInfo.location =
-            //       json.location?.name || json.location?.address || "";
-            //     eventInfo.offerURL = json.offers?.url || "";
-            //   }
-            // }
             if (script?.tagName === "SCRIPT" && script.textContent) {
               try {
                 const json = JSON.parse(script.textContent);
@@ -121,21 +102,16 @@ const scrapeMLB = async (
       }
     );
 
-    const formattedData: FormattedEvent[] = data.map((event) => {
-      const dayOfWeek = weekdayLowercaseFromStart(
-        event.startDate,
-        teamConfig.timeZone
-      );
-      return {
-        league: teamConfig.league || "",
-        teamName,
-        eventName: formatEventName(event.rawName),
-        ...event,
-        dayOfWeek,
-      };
-    });
-
-    return formattedData;
+    return data.map((event) => ({
+      team: teamName,
+      title: formatEventName(event.rawName),
+      // Listings are named "Visitors at Home".
+      opponent: event.matchup?.split(" at ")[0],
+      date: localDay(event.startDate, teamConfig.timeZone),
+      time: event.timeAndZone,
+      venue: event.location,
+      url: event.offerURL,
+    }));
   } catch (error) {
     console.error(`Error scraping ${teamConfig.url}`, error);
     return [];
@@ -154,23 +130,7 @@ const scrapeMLB = async (
       try {
         const data = await scrapeMLB(page, teamConfig, teamName);
 
-        // DB;
-        // try {
-        //   const response = await fetch(URL, {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify(data),
-        //   });
-        //   if (!response.ok) {
-        //     throw new Error(`Failed to post data: ${response.statusText}`);
-        //   }
-        //   const result = await response.json();
-        //   console.log("Data posted successfully:", result);
-        // } catch (err) {
-        //   console.error("Error posting data:", err);
-        // }
-
-        console.log(data);
+        await pushEvents("mlb", data);
       } catch (err) {
         console.error(`Failed to scrape ${teamName}`, err);
       }

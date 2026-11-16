@@ -27,11 +27,4 @@ export interface RawEvent {
   offerURL?: string;
 }
 
-export interface FormattedEvent extends RawEvent {
-  league: string;
-  teamName: string;
-  eventName: string;
-  dayOfWeek: string;
-}
-
 export type PuppeteerPage = Page;

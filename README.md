@@ -1,105 +1,69 @@
 # Giveaway Gameplan
 
-Giveaway Gameplan is a full-stack web application that aggregates and displays promotional giveaway events from major sports leagues (MLB, NFL, NBA, NHL, and more). Fans can easily explore upcoming games offering promotional items (bobbleheads, jerseys, hats, etc.) with filters by league, team, date, and day of the week.
+Giveaway Gameplan lists promotional giveaways (bobbleheads, jerseys, hats and more) at sports games, so fans can find them by league, team, date or day of the week.
 
----
+It is a single [Next.js](https://nextjs.org/) app with [Payload CMS](https://payloadcms.com/) built in. Editors add leagues, teams and events in the admin panel at `/admin`; the public site reads the same database directly. It runs on Vercel with a Neon Postgres database.
 
-## Features
-
-- 🏟️ **Sports Giveaways Aggregator** – Collects and centralizes promotional events from official team websites.
-- ⚡ **Fast Scraping Engine** – Puppeteer-based scraper that pulls data from sports teams' websites.
-- 🔍 **Dynamic Filtering** – Search giveaways by team, league, date, or day of the week.
-- 🎨 **Modern UI** – Built with Next.js 15+ (App Router) + TypeScript and styled with Tailwind CSS.
-- 🗄️ **Robust Backend** – TypeScript Express API connected to PostgreSQL (hosted on AWS RDS).
-- ☁️ **Secure Deployment** – Dockerized stack deployed to AWS EC2 with Cloudflare DNS + NGINX reverse proxy for SSL/TLS & DDoS protection.
-- 📱 **Responsive Design** – Optimized for desktop and mobile users.
-
----
-
-## Tech Stack
-
-### Frontend
-- [Next.js 15+ (App Router)](https://nextjs.org/) with TypeScript
-- React Server Components + Client Components
-- Tailwind CSS
-
-### Backend
-- [Express](https://expressjs.com/) with TypeScript
-- REST API with typed routes and parameterized SQL queries
-- PostgreSQL (AWS RDS)
-
-### Scraper
-- Puppeteer
-- Collects giveaways across MLB, NFL, NBA, NHL (WNBA planned)
-
-### Deployment & Infrastructure
-- AWS EC2 + Elastic IP
-- AWS RDS (Postgres)
-- Docker Hub for images
-- NGINX reverse proxy
-- Cloudflare DNS & SSL
-
----
-
-## Project Structure
+## Project structure
 
 ```
-/ui        → Next.js + TypeScript frontend
-/api       → Express + TypeScript backend
-/scrapers   → Puppeteer-based data collectors
-````
+src/
+  app/(frontend)/   Public site (App Router, Tailwind CSS)
+  app/(payload)/    Payload admin panel and REST/GraphQL API (generated, don't edit)
+  collections/      Content model: Leagues, Teams, Events, Users
+  access/           Who can read and change what
+  lib/              Event queries, date helpers, validation
+  migrations/       Database migrations
+  seed/             One-time import of the pre-CMS data
+scrapers/           Local-only Puppeteer scripts (separate package, not deployed)
+```
 
----
+## Content model
 
-## Getting Started
+- **Leagues** have a name, a URL slug and a sport (which decides the icon). Drag them in the admin list to reorder the site navigation.
+- **Teams** belong to a league and hold the home venue and the link to the team's promotions page.
+- **Events** are a giveaway at one home game: title, home team, opponent, date and start time. Venue and link come from the home team unless the event overrides them. League and day of week are filled in automatically.
+- **Users** are either admins or editors. Editors manage leagues, teams and events; admins can also manage users and delete leagues and teams. The first account created becomes an admin.
 
-### Prerequisites
-- Node.js 20+
-- pnpm (recommended) or npm
-- Docker + Docker Compose
-- PostgreSQL (local or RDS)
+Event dates are calendar days at the venue and times are local to the venue, so nothing shifts with the viewer's timezone.
 
-### Installation
-```bash
-# Clone the repo
-git clone https://github.com/giveaway-gameplan/giveaway-gameplan-mono.git
-cd giveaway-gameplan-mono
+## Getting started
 
-# Install dependencies (per repo)
-cd ui && pnpm install
-cd ../api && pnpm install
-````
-
-### Development
+Requires Node.js 24+ and pnpm.
 
 ```bash
-# Run frontend (Next.js)
-cd ui
-pnpm dev
-
-# Run backend (Express API)
-cd api
+pnpm install
+cp .env.example .env   # then fill in DATABASE_URI and PAYLOAD_SECRET
+pnpm migrate           # create the database tables
 pnpm dev
 ```
 
-### Build & Deploy
+Open http://localhost:3000/admin to create the first (admin) account, and http://localhost:3000 for the site.
+
+To load every league and team plus the 2025-26 events that predate the CMS, run `pnpm seed` once. It skips anything that already exists.
+
+For local development, point `DATABASE_URI` at a separate Neon branch rather than the production database.
+
+## Changing the content model
+
+After editing anything in `src/collections`:
 
 ```bash
-docker-compose up --build
+pnpm generate:types           # refresh src/payload-types.ts
+pnpm migrate:create my-change # write a migration for the schema change
+pnpm migrate                  # apply it
 ```
 
----
+Commit the migration. Vercel applies pending migrations on every deploy.
 
-## Roadmap
+## Deploying to Vercel
 
-* [ ] Expand scraper coverage (NFL, NHL, NBA, WNBA, NCAA, MLS, minor leagues)
-* [ ] User accounts + favorites tracking
-* [ ] Calendar export (Google/Apple)
-* [ ] Mobile app version with React Native
+1. Import the repository in Vercel (framework: Next.js, root directory: the repo root).
+2. Set the environment variables `DATABASE_URI` (Neon pooled connection string; `DATABASE_URL` from Vercel's Neon integration also works) and `PAYLOAD_SECRET`.
+3. Deploy. The build command in `vercel.json` runs `payload migrate` and then `next build`.
 
----
+Preview deployments run migrations too, so give the Preview environment its own Neon branch if you plan to change the schema in pull requests.
 
-## Acknowledgments
+## Scrapers
 
-* Inspired by the need for a **single source of truth** for sports giveaways.
-* Thanks to the open-source community for the tools and libraries that made this possible.
+`scrapers/` holds the MLB and NHL promotion-page scrapers. They run on your own machine and add events through the CMS API. See [scrapers/README.md](scrapers/README.md).

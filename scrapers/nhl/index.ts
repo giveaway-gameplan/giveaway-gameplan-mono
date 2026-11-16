@@ -1,22 +1,24 @@
 import puppeteer from "puppeteer";
+import type { Page } from "puppeteer";
+import { pushEvents, ScrapedEvent } from "../lib/payload";
 import nhlTeams from "./teams";
 
-const URL = "http://localhost:4000/api/v1/events/batch";
+type TeamConfig = (typeof nhlTeams)[keyof typeof nhlTeams];
 
 const scrapeNHL = async (
-  page,
-  teamConfig,
-  teamName,
-  currYear,
-  currentMonth
-) => {
+  page: Page,
+  teamConfig: TeamConfig,
+  teamName: string,
+  currYear: number,
+  currentMonth: number
+): Promise<ScrapedEvent[]> => {
   try {
     await page.goto(teamConfig.url);
     await page.waitForSelector(teamConfig.giveawayList);
 
     const data = await page.evaluate(
+      // Runs inside the browser page, so it is left untyped.
       ({
-        league,
         teamName,
         giveawayList,
         giveawayListItem,
@@ -30,40 +32,28 @@ const scrapeNHL = async (
       }) => {
         try {
           const list = document.querySelector(giveawayList);
-          if (!list) {
-            return { ok: false, error: "giveawayList not found", events: [] };
-          }
+          if (!list) return [];
 
           const listItems = Array.from(list.querySelectorAll(giveawayListItem));
-          if (!listItems) {
-            return {
-              ok: false,
-              error: "giveawayListItem not found",
-              events: [],
-            };
-          }
           const events = [];
 
           for (const listItem of listItems) {
             try {
-              let linkEl = "";
-              if (!alternativeEventLink && giveawaylistItemLink)
-                linkEl = listItem.querySelector(giveawaylistItemLink);
-              const headingEl = listItem.querySelector(giveawaylistItemHeading);
+              const linkEl =
+                !alternativeEventLink && giveawaylistItemLink
+                  ? listItem.querySelector<HTMLAnchorElement>(giveawaylistItemLink)
+                  : null;
+              const headingEl = listItem.querySelector<HTMLElement>(giveawaylistItemHeading);
               const headingText = headingEl?.innerText?.trim() || "";
 
               let eventDetails = listItem.querySelector(
                 giveawaylistItemDetails
               )?.textContent;
               if (!eventDetails) {
-                // events.push({
-                //   error: "giveawaylistItemDetails element not found",
-                // });
                 continue;
               }
 
               if (!eventDetails.includes("vs")) {
-                // events.push({ error: "eventDetails doesn't contain vs" });
                 continue;
               }
               if (eventDetails.includes("\n")) {
@@ -88,7 +78,7 @@ const scrapeNHL = async (
                   .split(" - Presented")[0];
               }
 
-              const [dayOfWeek, date] = (fullDate.trim() || "").split(", ");
+              const [, date] = (fullDate.trim() || "").split(", ");
               const safeDate = (date || "").trim();
               const monthName = safeDate.split(" ")[0].replace(".", "") || "";
               const eventMonthIndex = monthName
@@ -98,43 +88,29 @@ const scrapeNHL = async (
                 eventMonthIndex < currentMonth ? currYear + 1 : currYear;
 
               const eventDate = new Date(`${safeDate}, ${yearForEvent}`);
-              // const formattedDate = eventDate.toISOString().split("T")[0];
-              const formattedDate = isNaN(eventDate)
+              const formattedDate = isNaN(eventDate.getTime())
                 ? ""
                 : eventDate.toISOString().split("T")[0];
 
               events.push({
-                league,
-                teamName,
-                eventName: headingText,
-                rawName: headingText,
-                matchup: `${matchup.replace(". ", "")} at ${teamName}`,
-                startDate: formattedDate,
-                endDate: formattedDate,
-                description: ` on ${safeDate}, ${yearForEvent} at ${time}`,
-                timeAndZone: (time || "").trim(),
-                location,
-                offerURL: linkEl?.href || alternativeEventLink || "",
-                dayOfWeek: (dayOfWeek || "").trim().toLowerCase(),
+                team: teamName,
+                title: headingText,
+                opponent: matchup.replace(". ", ""),
+                date: formattedDate,
+                time: (time || "").trim(),
+                venue: location,
+                url: linkEl?.href || alternativeEventLink || "",
               });
-            } catch (e) {
-              // events.push({
-              //   error: `item parse failed: ${String((e && e.message) || e)}`,
-              // });
+            } catch {
               continue;
             }
           }
           return events;
-        } catch (error) {
-          return {
-            ok: false,
-            error: String((e && e.message) || e),
-            events: [],
-          };
+        } catch {
+          return [];
         }
       },
       {
-        league: teamConfig.league,
         teamName: teamName,
         giveawayList: teamConfig.giveawayList,
         giveawayListItem: teamConfig.giveawayListItem,
@@ -148,9 +124,10 @@ const scrapeNHL = async (
       }
     );
 
-    return data;
+    return data as ScrapedEvent[];
   } catch (error) {
     console.error(`Error scraping ${teamConfig.url}`, error);
+    return [];
   }
 };
 
@@ -175,24 +152,7 @@ const scrapeNHL = async (
           currentMonth
         );
 
-        // DB
-        // try {
-        //   const response = await fetch(URL, {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify(data),
-        //   });
-        //   if (!response.ok) {
-        //     throw new Error(`Failed to post data: ${response.statusText}`);
-        //   }
-        //   const result = await response.json();
-        //   console.log("Data posted successfully:", result);
-        // } catch (err) {
-        //   console.error("Error posting data:", err);
-        // }
-
-        console.log(data);
-        console.log(data.length);
+        await pushEvents("nhl", data);
       } catch (err) {
         console.error(`Failed to scrape ${teamName}`, err);
       }

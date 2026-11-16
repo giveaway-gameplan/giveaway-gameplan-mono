@@ -1,28 +1,13 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./dist",
-
-    "module": "commonjs",
-    "target": "es2020",
-    "lib": ["ES2020", "DOM"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "lib": ["ES2022", "DOM"],
     "types": ["node"],
-
-    "sourceMap": true,
-
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noPropertyAccessFromIndexSignature": true,
-
     "strict": true,
+    "noEmit": true,
     "skipLibCheck": true
   },
-  "include": ["mlb", "nhl"]
+  "include": ["lib", "mlb", "nhl"]
 }

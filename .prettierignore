@@ -1,0 +1,8 @@
+.next
+pnpm-lock.yaml
+src/payload-types.ts
+src/migrations
+src/seed/data
+src/app/(payload)
+scrapers
+public
