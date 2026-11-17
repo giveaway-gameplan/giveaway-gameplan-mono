@@ -93,3 +93,56 @@
     @apply font-sans;
   }
 }
+
+/*
+ * The spinning 3D logo (components/Logo3D.tsx): the flat logo cut out of a
+ * stack of slices, turned about its vertical axis.
+ */
+.logo-3d {
+  display: inline-block;
+  aspect-ratio: 913 / 888;
+  perspective: 12rem;
+}
+
+.logo-3d-spin {
+  position: relative;
+  display: block;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: logo-3d-spin 9s linear infinite;
+}
+
+.logo-3d-slice {
+  position: absolute;
+  inset: 0;
+  /* The sides: a darker shade of the logo's gold. */
+  background-color: #5f4a28;
+  mask: url('/logo_only.svg') center / contain no-repeat;
+}
+
+.logo-3d-face {
+  background-color: #917343;
+}
+
+/* A solid side of the box: as wide as the logo is thick, turned to face sideways. */
+.logo-3d-wall {
+  position: absolute;
+  width: var(--logo-depth);
+  margin-left: calc(var(--logo-depth) / -2);
+  background-color: #5f4a28;
+  transform: rotateY(90deg);
+}
+
+@keyframes logo-3d-spin {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* Visitors who ask for less motion get the logo standing still, at a slight angle. */
+@media (prefers-reduced-motion: reduce) {
+  .logo-3d-spin {
+    animation: none;
+    transform: rotateY(-24deg);
+  }
+}
