@@ -21,7 +21,6 @@
   "dependencies": {
     "@payloadcms/db-postgres": "3.93.0",
     "@payloadcms/next": "3.93.0",
-    "@payloadcms/richtext-lexical": "3.93.0",
     "@payloadcms/ui": "3.93.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.2",

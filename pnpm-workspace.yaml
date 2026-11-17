@@ -2,3 +2,7 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
+# Security fixes for packages that only arrive through other dependencies.
+overrides:
+  # Used by the admin panel's code editor; 3.4.17 fixes several sanitizer bypasses.
+  dompurify: '>=3.4.17 <4'
