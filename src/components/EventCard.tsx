@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge'
 import { MONTH_NAMES } from '@/lib/dates'
 import type { EventCardData } from '@/lib/events'
 
+import EventPhoto from './EventPhoto'
+
 const EventCard = ({ event }: { event: EventCardData }) => {
   const [, month, dayOfMonth] = event.day.split('-').map(Number)
 
@@ -34,6 +36,8 @@ const EventCard = ({ event }: { event: EventCardData }) => {
             {event.opponentName && ` vs ${event.opponentName}`}
           </p>
         </div>
+
+        {event.photoUrl && <EventPhoto src={event.photoUrl} alt={event.title} />}
       </div>
 
       <div className="flex items-center justify-between gap-3 border-t px-4 py-2.5 text-xs text-muted-foreground">

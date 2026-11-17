@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin, isLoggedIn } from '@/access'
+import { REGIONS } from '@/lib/regions'
 import { formatSlug } from '@/lib/slug'
 import { validateUrl } from '@/lib/validate'
 
@@ -9,7 +10,7 @@ export const Teams: CollectionConfig = {
   defaultSort: 'name',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'league', 'venue'],
+    defaultColumns: ['name', 'league', 'city', 'state', 'venue'],
     listSearchableFields: ['name', 'slug'],
     group: 'Content',
   },
@@ -69,6 +70,29 @@ export const Teams: CollectionConfig = {
         description:
           'Home arena or stadium. Used for every home event unless the event says otherwise.',
       },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'city',
+          type: 'text',
+          hooks: {
+            beforeValidate: [({ value }) => (typeof value === 'string' ? value.trim() : value)],
+          },
+          admin: {
+            width: '50%',
+            description: 'City the home venue is in. Fans can filter events by it.',
+          },
+        },
+        {
+          name: 'state',
+          type: 'select',
+          label: 'State or province',
+          options: Object.entries(REGIONS).map(([value, label]) => ({ label, value })),
+          admin: { width: '50%' },
+        },
+      ],
     },
     {
       name: 'promotionsUrl',

@@ -12,13 +12,16 @@ import {
   storedDateToDay,
   todayIn,
 } from './dates'
+import { isRegionCode, type RegionCode } from './regions'
 
 /** "Today" for server-rendered lists. Visitors' own "today" comes from the browser. */
 const SITE_TIME_ZONE = 'America/New_York'
 
 export type Sport = League['sport']
-export type NavLeague = Pick<League, 'id' | 'name' | 'slug' | 'sport'>
+export type NavLeague = Pick<League, 'id' | 'name' | 'slug' | 'sport' | 'theme'>
 export type NavTeam = Pick<Team, 'id' | 'name' | 'slug'>
+/** A place teams play, for the city and state filters. */
+export type TeamLocation = { city: string; state: RegionCode }
 
 export type EventCardData = {
   id: number
@@ -31,6 +34,7 @@ export type EventCardData = {
   time: string | null
   venue: string | null
   url: string | null
+  photoUrl: string | null
 }
 
 export type EventFilters = {
@@ -39,6 +43,8 @@ export type EventFilters = {
   date?: string
   dow?: string
   month?: string
+  city?: string
+  state?: string
 }
 
 const payloadClient = () => getPayload({ config })
@@ -50,7 +56,7 @@ export const getLeagues = cache(async (): Promise<NavLeague[]> => {
     sort: '_order',
     limit: 100,
     depth: 0,
-    select: { name: true, slug: true, sport: true },
+    select: { name: true, slug: true, sport: true, theme: true },
   })
   return docs
 })
@@ -73,9 +79,35 @@ export const getTeams = cache(async (leagueId: number): Promise<NavTeam[]> => {
   return docs
 })
 
+/**
+ * Every city that has a team, optionally within one league, sorted by name.
+ * Teams with no city or state yet are left out.
+ */
+export const getTeamLocations = cache(async (leagueSlug?: string): Promise<TeamLocation[]> => {
+  const league = leagueSlug ? await getLeague(leagueSlug) : null
+  if (leagueSlug && !league) return []
+
+  const payload = await payloadClient()
+  const { docs } = await payload.find({
+    collection: 'teams',
+    where: league ? { league: { equals: league.id } } : {},
+    pagination: false,
+    depth: 0,
+    select: { city: true, state: true },
+  })
+
+  const locations = new Map<string, TeamLocation>()
+  for (const { city, state } of docs) {
+    if (city && state) locations.set(`${city}|${state}`, { city, state })
+  }
+  return [...locations.values()].sort(
+    (a, b) => a.city.localeCompare(b.city) || a.state.localeCompare(b.state),
+  )
+})
+
 /** Drops anything in the query string that isn't a filter we understand. */
 export const parseFilters = (params: Record<string, string | string[] | undefined>) => {
-  const { date, dow, month } = params
+  const { date, dow, month, city, state } = params
   const monthNumber = typeof month === 'string' ? Number(month) : NaN
   return {
     date: isIsoDay(date) ? date : undefined,
@@ -87,6 +119,8 @@ export const parseFilters = (params: Record<string, string | string[] | undefine
       Number.isInteger(monthNumber) && monthNumber >= 1 && monthNumber <= 12
         ? String(monthNumber)
         : undefined,
+    city: typeof city === 'string' && city.trim() ? city.trim().slice(0, 100) : undefined,
+    state: isRegionCode(state) ? state : undefined,
   }
 }
 
@@ -119,6 +153,7 @@ const toCard = (event: Event): EventCardData => {
     time: event.time ?? null,
     venue: event.venue || team?.venue || null,
     url: event.url || team?.promotionsUrl || null,
+    photoUrl: event.photoUrl || null,
   }
 }
 
@@ -139,6 +174,10 @@ export const getEventCards = async (filters: EventFilters): Promise<EventCardDat
       and.push({ team: { equals: team.id } })
     }
   }
+
+  // Where an event is comes from its home team.
+  if (filters.city) and.push({ 'team.city': { equals: filters.city } })
+  if (filters.state) and.push({ 'team.state': { equals: filters.state } })
 
   if (filters.date) {
     and.push({ date: { equals: dayToStoredDate(filters.date) } })

@@ -1,11 +1,14 @@
 /**
  * One-time import of the leagues, teams and 2025-26 events that predate the CMS.
- * Safe to re-run: anything that already exists is left alone.
+ * Safe to re-run: anything that already exists is left alone, apart from teams
+ * with no city or state yet, which get theirs filled in.
  *
  *   pnpm seed
  */
 import config from '@payload-config'
 import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
+
+import type { Team } from '@/payload-types'
 
 import {
   dayOfWeekFor,
@@ -49,7 +52,7 @@ const runPool = async <T>(items: T[], worker: (item: T) => Promise<void>) => {
 
 const payload = await getPayload({ config })
 const review: string[] = []
-const totals = { leagues: 0, teams: 0, events: 0, duplicates: 0 }
+const totals = { leagues: 0, teams: 0, located: 0, events: 0, duplicates: 0 }
 
 for (const seedLeague of seedLeagues) {
   const fixSlug = (slug: string) => seedLeague.teamSlugFixes?.[slug] ?? slug
@@ -81,12 +84,25 @@ for (const seedLeague of seedLeagues) {
     where: { league: { equals: league.id } },
     pagination: false,
     depth: 0,
-    select: { name: true, slug: true, venue: true, promotionsUrl: true },
+    select: { name: true, slug: true, venue: true, promotionsUrl: true, city: true, state: true },
   })
   const teamsBySlug = new Map(existingTeams.docs.map((team) => [team.slug, team]))
 
-  for (const [slug, name] of seedLeague.teams) {
-    if (teamsBySlug.has(slug)) continue
+  for (const [slug, name, city, region] of seedLeague.teams) {
+    const state = region as Team['state']
+    const existing = teamsBySlug.get(slug)
+    if (existing) {
+      if (!existing.city && !existing.state) {
+        await payload.update({
+          collection: 'teams',
+          id: existing.id,
+          data: { city, state },
+          depth: 0,
+        })
+        totals.located++
+      }
+      continue
+    }
     const legacy = eventsByTeam.get(slug) ?? []
     const team = await payload.create({
       collection: 'teams',
@@ -94,6 +110,8 @@ for (const seedLeague of seedLeagues) {
         name,
         slug,
         league: league.id,
+        city,
+        state,
         venue: mostCommon(legacy.map((event) => event.location)),
         promotionsUrl: mostCommon(legacy.map((event) => event.offerURL)),
       },
@@ -186,6 +204,7 @@ for (const seedLeague of seedLeagues) {
 
 payload.logger.info(
   `Created ${totals.leagues} leagues, ${totals.teams} teams and ${totals.events} events. ` +
+    `Added a city and state to ${totals.located} existing teams. ` +
     `Skipped ${totals.duplicates} event records that already existed or were repeated in the source.`,
 )
 

@@ -149,6 +149,10 @@ export interface Event {
    */
   time?: string | null;
   /**
+   * Optional. Web address of a picture of the giveaway, shown as a thumbnail on the event card.
+   */
+  photoUrl?: string | null;
+  /**
    * Leave blank to use the home team’s venue.
    */
   venue?: string | null;
@@ -187,6 +191,76 @@ export interface Team {
    */
   venue?: string | null;
   /**
+   * City the home venue is in. Fans can filter events by it.
+   */
+  city?: string | null;
+  state?:
+    | (
+        | 'AL'
+        | 'AK'
+        | 'AZ'
+        | 'AR'
+        | 'CA'
+        | 'CO'
+        | 'CT'
+        | 'DE'
+        | 'DC'
+        | 'FL'
+        | 'GA'
+        | 'HI'
+        | 'ID'
+        | 'IL'
+        | 'IN'
+        | 'IA'
+        | 'KS'
+        | 'KY'
+        | 'LA'
+        | 'ME'
+        | 'MD'
+        | 'MA'
+        | 'MI'
+        | 'MN'
+        | 'MS'
+        | 'MO'
+        | 'MT'
+        | 'NE'
+        | 'NV'
+        | 'NH'
+        | 'NJ'
+        | 'NM'
+        | 'NY'
+        | 'NC'
+        | 'ND'
+        | 'OH'
+        | 'OK'
+        | 'OR'
+        | 'PA'
+        | 'RI'
+        | 'SC'
+        | 'SD'
+        | 'TN'
+        | 'TX'
+        | 'UT'
+        | 'VT'
+        | 'VA'
+        | 'WA'
+        | 'WV'
+        | 'WI'
+        | 'WY'
+        | 'AB'
+        | 'BC'
+        | 'MB'
+        | 'NB'
+        | 'NL'
+        | 'NS'
+        | 'ON'
+        | 'PE'
+        | 'QC'
+        | 'SK'
+        | 'CDMX'
+      )
+    | null;
+  /**
    * Link to the team's official promotions page. Events link here unless they have their own link.
    */
   promotionsUrl?: string | null;
@@ -217,6 +291,27 @@ export interface League {
    * Decides which icon is shown for this league.
    */
   sport: 'baseball' | 'basketball' | 'football' | 'hockey';
+  /**
+   * Optional colors for this league’s pages (and its teams’ pages). The site can be viewed in a light or a dark mode, so each has its own pair. Anything left empty keeps the site’s usual color.
+   */
+  theme?: {
+    /**
+     * Highlights such as dates, links and the selected team. Pick something dark enough to read on a light page.
+     */
+    lightAccent?: string | null;
+    /**
+     * The page behind everything. Text, cards and borders adjust to stay readable.
+     */
+    lightBackground?: string | null;
+    /**
+     * Highlights in dark mode. Pick something bright enough to read on a dark page.
+     */
+    darkAccent?: string | null;
+    /**
+     * The page behind everything in dark mode.
+     */
+    darkBackground?: string | null;
+  };
   teams?: {
     docs?: (number | Team)[];
     hasNextPage?: boolean;
@@ -352,6 +447,7 @@ export interface EventsSelect<T extends boolean = true> {
   opponent?: T;
   date?: T;
   time?: T;
+  photoUrl?: T;
   venue?: T;
   url?: T;
   league?: T;
@@ -368,6 +464,8 @@ export interface TeamsSelect<T extends boolean = true> {
   league?: T;
   slug?: T;
   venue?: T;
+  city?: T;
+  state?: T;
   promotionsUrl?: T;
   events?: T;
   updatedAt?: T;
@@ -382,6 +480,14 @@ export interface LeaguesSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   sport?: T;
+  theme?:
+    | T
+    | {
+        lightAccent?: T;
+        lightBackground?: T;
+        darkAccent?: T;
+        darkBackground?: T;
+      };
   teams?: T;
   updatedAt?: T;
   createdAt?: T;

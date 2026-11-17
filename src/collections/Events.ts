@@ -132,6 +132,17 @@ export const Events: CollectionConfig = {
       ],
     },
     {
+      name: 'photoUrl',
+      type: 'text',
+      label: 'Photo link',
+      validate: validateUrl,
+      admin: {
+        placeholder: 'https://',
+        description:
+          'Optional. Web address of a picture of the giveaway, shown as a thumbnail on the event card.',
+      },
+    },
+    {
       type: 'collapsible',
       label: 'Only if different from the team’s usual',
       admin: { initCollapsed: true },

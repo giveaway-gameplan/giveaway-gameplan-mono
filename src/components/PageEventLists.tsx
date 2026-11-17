@@ -2,7 +2,13 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
 import { MONTH_NAMES } from '@/lib/dates'
-import { currentMonth, type EventFilters, getLeague, getTeams } from '@/lib/events'
+import {
+  currentMonth,
+  type EventFilters,
+  getLeague,
+  getTeamLocations,
+  getTeams,
+} from '@/lib/events'
 
 import EventList from './EventList'
 import FilterBar from './FilterBar'
@@ -36,15 +42,17 @@ const pageTitle = async (leagueSlug?: string, teamSlug?: string) => {
 }
 
 const PageEventLists = async (filters: EventFilters) => {
-  const { league, team, date, dow, month } = filters
+  const { league, team, date, dow, month, city, state } = filters
   const month_ = currentMonth()
+  // A team only plays in one place, so its page has nothing to narrow down.
+  const locations = team ? [] : await getTeamLocations(league)
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">{await pageTitle(league, team)}</h1>
         <Suspense fallback={null}>
-          <FilterBar />
+          <FilterBar locations={locations} />
         </Suspense>
       </div>
 
@@ -55,10 +63,17 @@ const PageEventLists = async (filters: EventFilters) => {
       ) : (
         <>
           <Section title="Today">
-            <TodayEventList league={league} team={team} />
+            {/* Keyed so a new place shows the loading state rather than the old list. */}
+            <TodayEventList
+              key={`${city}|${state}`}
+              league={league}
+              team={team}
+              city={city}
+              state={state}
+            />
           </Section>
           <Section title={`This month · ${MONTH_NAMES[Number(month_) - 1]}`}>
-            <EventList league={league} team={team} month={month_} />
+            <EventList league={league} team={team} city={city} state={state} month={month_} />
           </Section>
         </>
       )}

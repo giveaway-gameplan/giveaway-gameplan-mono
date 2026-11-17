@@ -16,9 +16,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DAYS_OF_WEEK, isIsoDay, MONTH_NAMES } from '@/lib/dates'
+import type { TeamLocation } from '@/lib/events'
+import { REGIONS } from '@/lib/regions'
 import { cn } from '@/lib/utils'
 
-type FilterKey = 'date' | 'dow' | 'month'
+type WhenKey = 'date' | 'dow' | 'month'
+
+/** Select value that stands for "no filter", since an item can't have an empty one. */
+const ANY = 'any'
+
+const locationKey = ({ city, state }: TeamLocation) => `${city}|${state}`
 
 // Weeks start on Monday in the dropdown.
 const WEEKDAYS = [...DAYS_OF_WEEK.slice(1), DAYS_OF_WEEK[0]]
@@ -31,7 +38,7 @@ const toLocalDate = (day: string) => {
   return new Date(year, month - 1, dayOfMonth)
 }
 
-const FilterBar = () => {
+const FilterBar = ({ locations }: { locations: TeamLocation[] }) => {
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -41,11 +48,41 @@ const FilterBar = () => {
   const date = isIsoDay(dateParam) ? toLocalDate(dateParam) : undefined
   const dow = searchParams.get('dow') ?? ''
   const month = searchParams.get('month') ?? ''
-  const hasFilter = Boolean(date || dow || month)
+  const city = searchParams.get('city') ?? ''
+  const state = searchParams.get('state') ?? ''
+  const hasFilter = Boolean(date || dow || month || city || state)
 
-  // Only one filter applies at a time, so choosing one replaces the others.
-  const setFilter = (key?: FilterKey, value?: string) => {
-    router.replace(key && value ? `${pathname}?${key}=${value}` : pathname, { scroll: false })
+  const states = [...new Set(locations.map((location) => location.state))].sort((a, b) =>
+    REGIONS[a].localeCompare(REGIONS[b]),
+  )
+  // Picking a state narrows the cities on offer to that state's.
+  const cities = state ? locations.filter((location) => location.state === state) : locations
+  const selectedCity = city && cities.find((location) => location.city === city)
+
+  const setParams = (changes: Record<string, string | undefined>) => {
+    const params = new URLSearchParams(searchParams)
+    for (const [key, value] of Object.entries(changes)) {
+      if (value) params.set(key, value)
+      else params.delete(key)
+    }
+    const query = params.toString()
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+  }
+
+  // Only one of date, day of the week and month applies at a time, so choosing
+  // one replaces the others. Where the event is narrows whichever is chosen.
+  const setFilter = (key: WhenKey, value?: string) => {
+    setParams({ date: undefined, dow: undefined, month: undefined, [key]: value })
+  }
+
+  const setState = (value: string) => {
+    setParams({ state: value === ANY ? undefined : value, city: undefined })
+  }
+
+  // A city name can repeat across states (Portland), so a city brings its state along.
+  const setCity = (value: string) => {
+    const location = cities.find((candidate) => locationKey(candidate) === value)
+    setParams(location ? { city: location.city, state: location.state } : { city: undefined })
   }
 
   return (
@@ -103,8 +140,40 @@ const FilterBar = () => {
         </SelectContent>
       </Select>
 
+      {locations.length > 0 && (
+        <>
+          <Select value={state} onValueChange={setState}>
+            <SelectTrigger aria-label="State" className="flex-1 sm:w-40 sm:flex-none">
+              <SelectValue placeholder="State" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ANY}>All states</SelectItem>
+              {states.map((code) => (
+                <SelectItem key={code} value={code}>
+                  {REGIONS[code]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedCity ? locationKey(selectedCity) : ''} onValueChange={setCity}>
+            <SelectTrigger aria-label="City" className="flex-1 sm:w-44 sm:flex-none">
+              <SelectValue placeholder="City" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ANY}>All cities</SelectItem>
+              {cities.map((location) => (
+                <SelectItem key={locationKey(location)} value={locationKey(location)}>
+                  {location.city}, {location.state}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </>
+      )}
+
       {hasFilter && (
-        <Button variant="ghost" onClick={() => setFilter()}>
+        <Button variant="ghost" onClick={() => router.replace(pathname, { scroll: false })}>
           <XIcon />
           Clear
         </Button>

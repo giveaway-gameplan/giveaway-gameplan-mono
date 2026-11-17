@@ -3,20 +3,25 @@
 import { useEffect, useState } from 'react'
 
 import { getEventsOnDay } from '@/lib/actions'
-import type { EventCardData } from '@/lib/events'
+import type { EventCardData, EventFilters } from '@/lib/events'
 
 import EventCards, { EmptyState, EventCardsSkeleton } from './EventCards'
 
 // en-CA formats dates as YYYY-MM-DD, in the visitor's own timezone.
 const localToday = () => new Intl.DateTimeFormat('en-CA').format(new Date())
 
-export default function TodayEventList({ league, team }: { league?: string; team?: string }) {
+export default function TodayEventList({
+  league,
+  team,
+  city,
+  state,
+}: Pick<EventFilters, 'league' | 'team' | 'city' | 'state'>) {
   const [events, setEvents] = useState<EventCardData[] | null>(null)
   const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     let cancelled = false
-    getEventsOnDay(localToday(), league, team)
+    getEventsOnDay(localToday(), { league, team, city, state })
       .then((result) => {
         if (!cancelled) setEvents(result)
       })
@@ -26,7 +31,7 @@ export default function TodayEventList({ league, team }: { league?: string; team
     return () => {
       cancelled = true
     }
-  }, [league, team])
+  }, [league, team, city, state])
 
   if (failed) return <EmptyState>Today’s giveaways couldn’t be loaded. Try refreshing.</EmptyState>
   if (events === null) return <EventCardsSkeleton />
